@@ -207,35 +207,3 @@ wilcox.test(yes_counts$logCount, no_counts$logCount)
 yes_counts <- semi_join(top_gene_leaf_sheath %>% filter(Type == "LGT"), yes, by = c("LGT.Cluster", "Accession", "Type"))
 no_counts <- semi_join(top_gene_leaf_sheath %>% filter(Type == "LGT"), no, by = c("LGT.Cluster", "Accession", "Type"))
 wilcox.test(yes_counts$logCount, no_counts$logCount)
-
-#sum_all
-yes_counts <- semi_join(sum_all %>% filter(Type == "Native"), yes, by = c("LGT.Cluster", "Accession", "Type"))
-no_counts <- semi_join(sum_all %>% filter(Type == "Native"), no, by = c("LGT.Cluster", "Accession", "Type"))
-wilcox.test(yes_counts$logCount, no_counts$logCount)
-#top_gene_all
-yes_counts <- semi_join(top_gene_all %>% filter(Type == "Native"), yes, by = c("LGT.Cluster", "Accession", "Type"))
-no_counts <- semi_join(top_gene_all %>% filter(Type == "Native"), no, by = c("LGT.Cluster", "Accession", "Type"))
-wilcox.test(yes_counts$logCount, no_counts$logCount)
-#sum_leaf_sheath
-yes_counts <- semi_join(sum_leaf_sheath %>% filter(Type == "Native"), yes, by = c("LGT.Cluster", "Accession", "Type"))
-no_counts <- semi_join(sum_leaf_sheath %>% filter(Type == "Native"), no, by = c("LGT.Cluster", "Accession", "Type"))
-wilcox.test(yes_counts$logCount, no_counts$logCount)
-#top_gene_leaf_sheath
-yes_counts <- semi_join(top_gene_leaf_sheath %>% filter(Type == "Native"), yes, by = c("LGT.Cluster", "Accession", "Type"))
-no_counts <- semi_join(top_gene_leaf_sheath %>% filter(Type == "Native"), no, by = c("LGT.Cluster", "Accession", "Type"))
-wilcox.test(yes_counts$logCount, no_counts$logCount)
-
-# averaging???
-average <- rbind(sum_all, top_gene_all, sum_leaf_sheath, top_gene_leaf_sheath) %>% 
-  group_by(LGT.Cluster, Accession, Type, Sample) %>% 
-  summarise(mean_logCount = mean(logCount))
-yes_counts <- semi_join(average, yes, by = c("LGT.Cluster", "Accession", "Type"))
-no_counts <- semi_join(average, no, by = c("LGT.Cluster", "Accession", "Type"))
-wilcox.test(yes_counts$mean_logCount, no_counts$mean_logCount)
-
-all <- rbind(sum_all, top_gene_all, sum_leaf_sheath, top_gene_leaf_sheath)
-combined <- left_join(all, paralogs, by = c("LGT.Cluster", "Accession", "Type"))
-
-ggplot(combined, aes(x = Method, y = logCount, fill = Paralogs)) +
-  geom_boxplot() +
-  facet_wrap(~ Type)
